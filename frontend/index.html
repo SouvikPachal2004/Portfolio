@@ -1,0 +1,562 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Souvik Pachal | Portfolio</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+</head>
+<body>
+
+  <canvas id="particles-canvas"></canvas>
+  <div id="toast" class="toast"></div>
+
+  <!-- Resume Permission Modal -->
+  <div id="resume-modal" class="modal-overlay" style="display:none;">
+    <div class="modal-box">
+      <button class="modal-close" id="modal-close"><i class="fas fa-times"></i></button>
+      <div class="modal-icon"><i class="fas fa-file-pdf"></i></div>
+      <h3>Request Resume Access</h3>
+      <p>Please provide your details. Souvik will review your request and send you the download link via email.</p>
+      <form id="resume-request-form" novalidate>
+        <div class="form-group">
+          <label for="req-name">Your Name</label>
+          <input type="text" id="req-name" placeholder="Full name" />
+          <span class="field-error" id="req-name-error"></span>
+        </div>
+        <div class="form-group">
+          <label for="req-email">Your Email</label>
+          <input type="email" id="req-email" placeholder="your@email.com" />
+          <span class="field-error" id="req-email-error"></span>
+        </div>
+        <div class="form-group">
+          <label for="req-reason">Reason for Request</label>
+          <input type="text" id="req-reason" placeholder="e.g. Job opportunity, Collaboration..." />
+          <span class="field-error" id="req-reason-error"></span>
+        </div>
+        <button type="submit" class="btn btn-primary btn-full" id="req-submit-btn">
+          <span id="req-btn-text"><i class="fas fa-paper-plane"></i> Send Request</span>
+          <span id="req-btn-loading" style="display:none;"><i class="fas fa-spinner fa-spin"></i> Sending...</span>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Navbar -->
+  <nav class="navbar" id="navbar">
+    <div class="nav-logo">Souvik <span class="dot">Pachal</span></div>
+    <ul class="nav-links" id="nav-links">
+      <li><a href="#home" class="nav-link active">Home</a></li>
+      <li><a href="#about" class="nav-link">About</a></li>
+      <li><a href="#skills" class="nav-link">Skills</a></li>
+      <li><a href="#experience" class="nav-link">Experience</a></li>
+      <li><a href="#projects" class="nav-link">Projects</a></li>
+      <li><a href="#contact" class="nav-link">Contact</a></li>
+    </ul>
+    <a href="#" id="cv-download-btn" class="btn-resume"><i class="fas fa-download"></i> Download CV</a>
+    <div class="hamburger" id="hamburger"><span></span><span></span><span></span></div>
+  </nav>
+
+  <!-- Hero -->
+  <section id="home" class="hero">
+    <div class="hero-content">
+      <p class="hero-greeting">&#128075; Hello, I'm</p>
+      <h1 class="hero-name">Souvik Pachal</h1>
+      <h2 class="hero-role">I'm a <span id="typewriter-role"></span><span class="cursor">|</span></h2>
+      <p class="hero-tagline">Passionate about building scalable applications and solving real-world problems.</p>
+      <div class="hero-btns">
+        <a href="#projects" class="btn btn-primary">View My Work <i class="fas fa-arrow-right"></i></a>
+        <a href="#contact" class="btn btn-outline">Contact Me <i class="fas fa-envelope"></i></a>
+      </div>
+      <div class="hero-socials">
+        <a href="https://github.com/SouvikPachal2004" target="_blank" rel="noopener" aria-label="GitHub"><i class="fab fa-github"></i></a>
+        <a href="https://www.linkedin.com/in/souvik-pachal-b7a8b5290/" target="_blank" rel="noopener" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+        <a href="mailto:souvikpachal2024@gmail.com" aria-label="Email"><i class="fas fa-envelope"></i></a>
+      </div>
+    </div>
+    <div class="scroll-down"><a href="#about"><i class="fas fa-chevron-down"></i></a></div>
+  </section>
+
+  <!-- About -->
+  <section id="about" class="about section">
+    <div class="container">
+      <div class="section-header reveal">
+        <span class="section-tag">Get To Know</span>
+        <h2 class="section-title">About Me</h2>
+      </div>
+      <div class="about-grid">
+        <div class="about-image reveal">
+          <div class="image-frame">
+            <img src="profile.jpeg" alt="Souvik Pachal" class="profile-img" />
+          </div>
+        </div>
+        <div class="about-content reveal">
+          <p class="about-bio">
+            I'm a <span class="highlight">Computer Science &amp; Engineering (Data Science)</span> student at Techno Main Salt Lake (2022&ndash;2026), with a CGPA of 7.90. I have strong foundations in Java, Python, and MySQL, and I'm deeply passionate about building scalable, real-world applications.
+          </p>
+          <p class="about-bio">
+            My journey spans <span class="highlight">machine learning</span>, <span class="highlight">data analytics</span>, and <span class="highlight">full-stack web development</span>. I've completed internships at Infotact Solutions (Data Analytics) and EDUNET&ndash;Microsoft Foundation (AI &amp; ML), gaining hands-on experience in data pipelines and ML model building.
+          </p>
+          <p class="about-bio">
+            I believe in writing clean, maintainable code and continuously learning new technologies. Whether it's building an e-commerce platform, a deforestation monitoring system, or a donation web app &mdash; I bring curiosity, discipline, and a problem-solving mindset to every project.
+          </p>
+          <p class="about-bio">
+            Represented school at district-level cricket (U-14 &amp; U-17), secured <span class="highlight">WBJEE Rank 16,235</span> among 1,00,000+ candidates. Fluent in English, Hindi, and Bengali.
+          </p>
+          <div class="about-stats">
+            <div class="stat-card">
+              <span class="stat-number">7.90</span>
+              <span class="stat-label">CGPA</span>
+            </div>
+            <div class="stat-card">
+              <span class="stat-number">2</span>
+              <span class="stat-label">Internships</span>
+            </div>
+            <div class="stat-card">
+              <span class="stat-number">8+</span>
+              <span class="stat-label">Projects</span>
+            </div>
+            <div class="stat-card">
+              <span class="stat-number">2</span>
+              <span class="stat-label">Certifications</span>
+            </div>
+          </div>
+          <a href="#contact" class="btn btn-primary">Let's Connect <i class="fas fa-arrow-right"></i></a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Skills -->
+  <section id="skills" class="skills section">
+    <div class="container">
+      <div class="section-header reveal">
+        <span class="section-tag">What I Know</span>
+        <h2 class="section-title">Skills &amp; Technologies</h2>
+      </div>
+      <div class="skills-grid">
+        <div class="skill-category reveal">
+          <h3 class="category-title"><i class="fas fa-code"></i> Programming Languages</h3>
+          <div class="skill-pills">
+            <span class="pill"><i class="fab fa-java pill-icon"></i> Java</span>
+            <span class="pill"><i class="fab fa-python pill-icon"></i> Python</span>
+            <span class="pill"><i class="fab fa-js pill-icon"></i> JavaScript</span>
+            <span class="pill"><i class="fab fa-html5 pill-icon"></i> HTML/CSS</span>
+          </div>
+        </div>
+        <div class="skill-category reveal">
+          <h3 class="category-title"><i class="fas fa-brain"></i> ML &amp; Data Science</h3>
+          <div class="skill-pills">
+            <span class="pill"><i class="fas fa-hashtag pill-icon"></i> NumPy</span>
+            <span class="pill"><i class="fas fa-table pill-icon"></i> Pandas</span>
+            <span class="pill"><i class="fas fa-robot pill-icon"></i> Scikit-Learn</span>
+            <span class="pill"><i class="fas fa-chart-bar pill-icon"></i> Matplotlib</span>
+            <span class="pill"><i class="fas fa-water pill-icon"></i> Seaborn</span>
+            <span class="pill"><i class="fas fa-chart-pie pill-icon"></i> Power BI</span>
+          </div>
+        </div>
+        <div class="skill-category reveal">
+          <h3 class="category-title"><i class="fas fa-database"></i> Database</h3>
+          <div class="skill-pills">
+            <span class="pill"><i class="fas fa-database pill-icon"></i> MySQL</span>
+            <span class="pill"><i class="fas fa-server pill-icon"></i> DBMS</span>
+            <span class="pill"><i class="fas fa-leaf pill-icon"></i> MongoDB</span>
+          </div>
+        </div>
+        <div class="skill-category reveal">
+          <h3 class="category-title"><i class="fas fa-tools"></i> Tools &amp; Frameworks</h3>
+          <div class="skill-pills">
+            <span class="pill"><i class="fab fa-node-js pill-icon"></i> Node.js</span>
+            <span class="pill"><i class="fas fa-fire pill-icon"></i> Flask</span>
+            <span class="pill"><i class="fab fa-git-alt pill-icon"></i> Git</span>
+            <span class="pill"><i class="fas fa-code pill-icon"></i> VS Code</span>
+            <span class="pill"><i class="fas fa-lightbulb pill-icon"></i> IntelliJ IDEA</span>
+          </div>
+        </div>
+        <div class="skill-category reveal">
+          <h3 class="category-title"><i class="fas fa-users"></i> Soft Skills</h3>
+          <div class="skill-pills">
+            <span class="pill"><i class="fas fa-crown pill-icon"></i> Leadership</span>
+            <span class="pill"><i class="fas fa-handshake pill-icon"></i> Team Collaboration</span>
+            <span class="pill"><i class="fas fa-puzzle-piece pill-icon"></i> Problem Solving</span>
+            <span class="pill"><i class="fas fa-comments pill-icon"></i> Communication</span>
+            <span class="pill"><i class="fas fa-sync pill-icon"></i> Adaptability</span>
+          </div>
+        </div>
+        <div class="skill-category reveal">
+          <h3 class="category-title"><i class="fas fa-language"></i> Languages Known</h3>
+          <div class="skill-pills">
+            <span class="pill"><i class="fas fa-globe pill-icon"></i> English</span>
+            <span class="pill"><i class="fas fa-globe pill-icon"></i> Hindi</span>
+            <span class="pill"><i class="fas fa-globe pill-icon"></i> Bengali</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Experience -->
+  <section id="experience" class="experience section">
+    <div class="container">
+      <div class="section-header reveal">
+        <span class="section-tag">My Journey</span>
+        <h2 class="section-title">Experience</h2>
+      </div>
+      <div class="timeline">
+        <div class="timeline-item reveal">
+          <div class="timeline-dot"></div>
+          <div class="timeline-card">
+            <div class="timeline-header">
+              <div>
+                <h3 class="job-title">Data Analytics Intern</h3>
+                <p class="company">Infotact Solutions</p>
+              </div>
+              <span class="date-badge">Sep 2025 &ndash; Nov 2025</span>
+            </div>
+            <p class="job-desc">Completed a 2-month internship in Data Analytics. Gained hands-on experience through projects involving data collection, cleaning, analysis, and interpretation, showcasing strong problem-solving abilities.</p>
+            <div class="tech-tags">
+              <span class="tag">Data Analytics</span>
+              <span class="tag">Python</span>
+              <span class="tag">Data Cleaning</span>
+              <span class="tag">Visualization</span>
+            </div>
+          </div>
+        </div>
+        <div class="timeline-item reveal">
+          <div class="timeline-dot"></div>
+          <div class="timeline-card">
+            <div class="timeline-header">
+              <div>
+                <h3 class="job-title">AI &amp; ML Intern</h3>
+                <p class="company">EDUNET &ndash; Microsoft Foundation (AICTE)</p>
+              </div>
+              <span class="date-badge">Apr 2025 &ndash; May 2025</span>
+            </div>
+            <p class="job-desc">Successfully completed a 4-week internship on Foundations of Artificial Intelligence &amp; Machine Learning &mdash; a Microsoft initiative implemented by Edunet Foundation in collaboration with AICTE.</p>
+            <div class="tech-tags">
+              <span class="tag">AI</span>
+              <span class="tag">Machine Learning</span>
+              <span class="tag">Microsoft</span>
+              <span class="tag">AICTE</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section-header reveal" style="margin-top:4rem;">
+        <span class="section-tag">Academic</span>
+        <h2 class="section-title">Education</h2>
+      </div>
+      <div class="edu-grid">
+        <div class="edu-card reveal">
+          <div class="edu-icon"><i class="fas fa-graduation-cap"></i></div>
+          <div class="edu-info">
+            <h3>B.Tech CSE (Data Science)</h3>
+            <p class="edu-school">Techno Main Salt Lake</p>
+            <p class="edu-detail">2022 &ndash; 2026 &nbsp;|&nbsp; CGPA: 7.90 &nbsp;|&nbsp; Howrah, India</p>
+          </div>
+        </div>
+        <div class="edu-card reveal">
+          <div class="edu-icon"><i class="fas fa-school"></i></div>
+          <div class="edu-info">
+            <h3>Higher Secondary</h3>
+            <p class="edu-school">Howrah Vivekananda Institution</p>
+            <p class="edu-detail">2022 &nbsp;|&nbsp; Percentage: 80.2% &nbsp;|&nbsp; Howrah, India</p>
+          </div>
+        </div>
+        <div class="edu-card reveal">
+          <div class="edu-icon"><i class="fas fa-book"></i></div>
+          <div class="edu-info">
+            <h3>Secondary</h3>
+            <p class="edu-school">Howrah Vivekananda Institution</p>
+            <p class="edu-detail">2020 &nbsp;|&nbsp; Percentage: 86.85% &nbsp;|&nbsp; Howrah, India</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Projects -->
+  <section id="projects" class="projects section">
+    <div class="container">
+      <div class="section-header reveal">
+        <span class="section-tag">My Work</span>
+        <h2 class="section-title">Projects</h2>
+      </div>
+      <div class="projects-grid">
+
+        <div class="project-card reveal">
+          <div class="project-top">
+            <div class="project-icon"><i class="fas fa-shopping-bag"></i></div>
+            <div class="project-links">
+              <a href="https://github.com/SouvikPachal2004/Shopify-Store" target="_blank" rel="noopener" title="GitHub"><i class="fab fa-github"></i></a>
+              <a href="https://shopify-store-vert.vercel.app" target="_blank" rel="noopener" title="Live Demo"><i class="fas fa-external-link-alt"></i></a>
+            </div>
+          </div>
+          <h3 class="project-title">HappyPaws &ndash; E-commerce Store</h3>
+          <p class="project-desc">Full-featured e-commerce platform for pet products with 12 pages, dynamic product loading from MongoDB, real-time cart, user authentication, search &amp; filter, and complete checkout flow.</p>
+          <div class="project-tags">
+            <span class="tag">HTML/CSS/JS</span>
+            <span class="tag">Node.js</span>
+            <span class="tag">Express</span>
+            <span class="tag">MongoDB</span>
+            <span class="tag">REST API</span>
+          </div>
+        </div>
+
+        <div class="project-card reveal">
+          <div class="project-top">
+            <div class="project-icon"><i class="fas fa-hand-holding-heart"></i></div>
+            <div class="project-links">
+              <a href="https://github.com/SouvikPachal2004/golfgive" target="_blank" rel="noopener" title="GitHub"><i class="fab fa-github"></i></a>
+              <a href="https://golfgive-frontend.vercel.app/index.html" target="_blank" rel="noopener" title="Live Demo"><i class="fas fa-external-link-alt"></i></a>
+            </div>
+          </div>
+          <h3 class="project-title">GolfGive &ndash; Donation Platform</h3>
+          <p class="project-desc">Modern web platform connecting donors with meaningful causes. Browse campaigns, donate easily, and track contributions through a clean, responsive interface. Deployed on Vercel.</p>
+          <div class="project-tags">
+            <span class="tag">HTML</span>
+            <span class="tag">CSS</span>
+            <span class="tag">JavaScript</span>
+            <span class="tag">Vercel</span>
+          </div>
+        </div>
+
+        <div class="project-card reveal">
+          <div class="project-top">
+            <div class="project-icon"><i class="fas fa-book-open"></i></div>
+            <div class="project-links">
+              <a href="https://github.com/SouvikPachal2004/online-notes-sharing-platform" target="_blank" rel="noopener" title="GitHub"><i class="fab fa-github"></i></a>
+            </div>
+          </div>
+          <h3 class="project-title">Online Notes Sharing Platform</h3>
+          <p class="project-desc">Web app where students upload, categorize, search, and download study notes. Features user auth, file uploads (PDF, DOCX, PPT), keyword search, download counter, and responsive UI.</p>
+          <div class="project-tags">
+            <span class="tag">Python</span>
+            <span class="tag">Flask</span>
+            <span class="tag">SQLite</span>
+            <span class="tag">HTML/CSS/JS</span>
+            <span class="tag">Bootstrap</span>
+          </div>
+        </div>
+
+        <div class="project-card reveal">
+          <div class="project-top">
+            <div class="project-icon"><i class="fas fa-tree"></i></div>
+            <div class="project-links">
+              <a href="https://github.com/SouvikPachal2004/deforestation-monitoring" target="_blank" rel="noopener" title="GitHub"><i class="fab fa-github"></i></a>
+            </div>
+          </div>
+          <h3 class="project-title">Deforestation Monitoring</h3>
+          <p class="project-desc">Flask + ML web app for monitoring deforestation using satellite imagery. Detects forest loss with TensorFlow models, handles raster data with Rasterio, and visualizes trends via an interactive dashboard.</p>
+          <div class="project-tags">
+            <span class="tag">Python</span>
+            <span class="tag">Flask</span>
+            <span class="tag">TensorFlow</span>
+            <span class="tag">Rasterio</span>
+            <span class="tag">Pandas</span>
+          </div>
+        </div>
+
+        <div class="project-card reveal">
+          <div class="project-top">
+            <div class="project-icon"><i class="fas fa-chart-line"></i></div>
+            <div class="project-links">
+              <a href="https://github.com/SouvikPachal2004/Retail-Sales-Forecasting-System" target="_blank" rel="noopener" title="GitHub"><i class="fab fa-github"></i></a>
+            </div>
+          </div>
+          <h3 class="project-title">Retail Sales Forecasting</h3>
+          <p class="project-desc">ML model using Random Forest to predict weekly Walmart store sales based on historical and economic data. Includes data preprocessing, feature engineering, and model evaluation.</p>
+          <div class="project-tags">
+            <span class="tag">Python</span>
+            <span class="tag">Pandas</span>
+            <span class="tag">NumPy</span>
+            <span class="tag">Scikit-learn</span>
+            <span class="tag">Matplotlib</span>
+          </div>
+        </div>
+
+        <div class="project-card reveal">
+          <div class="project-top">
+            <div class="project-icon"><i class="fas fa-users"></i></div>
+            <div class="project-links">
+              <a href="https://github.com/SouvikPachal2004/Customer-Segmentation-Using-Clustering" target="_blank" rel="noopener" title="GitHub"><i class="fab fa-github"></i></a>
+            </div>
+          </div>
+          <h3 class="project-title">Customer Segmentation</h3>
+          <p class="project-desc">Segments mall customers into 5 distinct groups using K-Means Clustering based on annual income and spending score. Provides actionable insights for targeted marketing strategies.</p>
+          <div class="project-tags">
+            <span class="tag">Python</span>
+            <span class="tag">Scikit-learn</span>
+            <span class="tag">Pandas</span>
+            <span class="tag">Matplotlib</span>
+            <span class="tag">Seaborn</span>
+          </div>
+        </div>
+
+        <div class="project-card reveal">
+          <div class="project-top">
+            <div class="project-icon"><i class="fas fa-graduation-cap"></i></div>
+            <div class="project-links">
+              <a href="https://github.com/SouvikPachal2004/Student-Performance-Prediction" target="_blank" rel="noopener" title="GitHub"><i class="fab fa-github"></i></a>
+            </div>
+          </div>
+          <h3 class="project-title">Student Performance Prediction</h3>
+          <p class="project-desc">ML model to predict student academic performance based on various factors. Helps educators identify at-risk students early and take proactive measures to improve learning outcomes.</p>
+          <div class="project-tags">
+            <span class="tag">Python</span>
+            <span class="tag">Scikit-learn</span>
+            <span class="tag">Pandas</span>
+            <span class="tag">NumPy</span>
+            <span class="tag">Jupyter</span>
+          </div>
+        </div>
+
+        <div class="project-card reveal">
+          <div class="project-top">
+            <div class="project-icon"><i class="fas fa-university"></i></div>
+            <div class="project-links">
+              <a href="https://github.com/SouvikPachal2004" target="_blank" rel="noopener" title="GitHub"><i class="fab fa-github"></i></a>
+            </div>
+          </div>
+          <h3 class="project-title">Bank Management System</h3>
+          <p class="project-desc">Secure system for managing bank accounts, transactions, and records. Supports account creation, deposits, withdrawals, balance checks, and deletions using OOP principles and file handling.</p>
+          <div class="project-tags">
+            <span class="tag">Java</span>
+            <span class="tag">MySQL</span>
+            <span class="tag">OOP</span>
+            <span class="tag">File I/O</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Certifications -->
+  <section id="achievements" class="achievements section">
+    <div class="container">
+      <div class="section-header reveal">
+        <span class="section-tag">Recognition</span>
+        <h2 class="section-title">Certifications &amp; Achievements</h2>
+      </div>
+      <div class="cert-grid">
+        <div class="cert-card reveal">
+          <div class="cert-icon"><i class="fas fa-certificate"></i></div>
+          <div>
+            <h4>Programming using Java</h4>
+            <p>Infosys Springboard</p>
+          </div>
+        </div>
+        <div class="cert-card reveal">
+          <div class="cert-icon"><i class="fas fa-certificate"></i></div>
+          <div>
+            <h4>Database Management System</h4>
+            <p>Infosys Springboard</p>
+          </div>
+        </div>
+        <div class="cert-card reveal">
+          <div class="cert-icon"><i class="fas fa-trophy"></i></div>
+          <div>
+            <h4>WBJEE Rank 16,235</h4>
+            <p>Among 1,00,000+ candidates</p>
+          </div>
+        </div>
+        <div class="cert-card reveal">
+          <div class="cert-icon"><i class="fas fa-medal"></i></div>
+          <div>
+            <h4>District-Level Cricket</h4>
+            <p>U-14 &amp; U-17 Tournaments</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact -->
+  <section id="contact" class="contact section">
+    <div class="container">
+      <div class="section-header reveal">
+        <span class="section-tag">Get In Touch</span>
+        <h2 class="section-title">Contact Me</h2>
+      </div>
+      <div class="contact-grid">
+        <div class="contact-info reveal">
+          <h3>Let's talk about everything!</h3>
+          <p>Feel free to reach out for collaborations, opportunities, or just a friendly chat.</p>
+          <div class="contact-items">
+            <div class="contact-item">
+              <div class="contact-icon"><i class="fas fa-envelope"></i></div>
+              <div>
+                <span class="contact-label">Email</span>
+                <a href="mailto:souvikpachal2024@gmail.com">souvikpachal2024@gmail.com</a>
+              </div>
+            </div>
+            <div class="contact-item">
+              <div class="contact-icon"><i class="fas fa-phone"></i></div>
+              <div>
+                <span class="contact-label">Phone</span>
+                <a href="tel:+917439078190">+91 7439078190</a>
+              </div>
+            </div>
+            <div class="contact-item">
+              <div class="contact-icon"><i class="fas fa-map-marker-alt"></i></div>
+              <div>
+                <span class="contact-label">Location</span>
+                <span>Howrah, West Bengal, India</span>
+              </div>
+            </div>
+          </div>
+          <div class="social-links">
+            <a href="https://github.com/SouvikPachal2004" target="_blank" rel="noopener" aria-label="GitHub"><i class="fab fa-github"></i></a>
+            <a href="https://www.linkedin.com/in/souvik-pachal-b7a8b5290/" target="_blank" rel="noopener" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+          </div>
+        </div>
+        <div class="contact-form-wrap reveal">
+          <form id="contact-form" novalidate>
+            <div class="form-group">
+              <label for="name">Full Name</label>
+              <input type="text" id="name" name="name" placeholder="Your name" autocomplete="name" />
+              <span class="field-error" id="name-error"></span>
+            </div>
+            <div class="form-group">
+              <label for="email">Email Address</label>
+              <input type="email" id="email" name="email" placeholder="your@email.com" autocomplete="email" />
+              <span class="field-error" id="email-error"></span>
+            </div>
+            <div class="form-group">
+              <label for="message">Message</label>
+              <textarea id="message" name="message" rows="5" placeholder="Your message..."></textarea>
+              <span class="field-error" id="message-error"></span>
+            </div>
+            <button type="submit" class="btn btn-primary btn-full" id="submit-btn">
+              <span id="btn-text">Send Message <i class="fas fa-paper-plane"></i></span>
+              <span id="btn-loading" style="display:none;"><i class="fas fa-spinner fa-spin"></i> Sending...</span>
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-logo">Souvik <span class="dot">Pachal</span></div>
+        <p class="footer-text">Designed &amp; Built by <span class="highlight">Souvik Pachal</span> &copy; 2025</p>
+        <div class="footer-socials">
+          <a href="https://github.com/SouvikPachal2004" target="_blank" rel="noopener" aria-label="GitHub"><i class="fab fa-github"></i></a>
+          <a href="https://www.linkedin.com/in/souvik-pachal-b7a8b5290/" target="_blank" rel="noopener" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+        </div>
+      </div>
+    </div>
+    <a href="#home" class="back-to-top" id="back-to-top"><i class="fas fa-chevron-up"></i></a>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
