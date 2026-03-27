@@ -1,6 +1,6 @@
 /* ===== PORTFOLIO SCRIPT — Souvik Pachal ===== */
 
-const API_URL = 'http://localhost:3000/api/contact';
+const API_URL = 'https://portfolio-backend-71d7.onrender.com/api/contact';
 
 /* ===== ENHANCED PARTICLES ===== */
 (function initParticles() {
