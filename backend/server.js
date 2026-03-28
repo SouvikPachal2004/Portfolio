@@ -10,8 +10,9 @@ const app = express();
 
 app.use(express.json());
 app.use(cors({
-  origin: process.env.FRONTEND_ORIGIN || '*',
-  methods: ['GET', 'POST']
+  origin: '*',
+  methods: ['GET', 'POST'],
+  allowedHeaders: ['Content-Type']
 }));
 
 // Serve resume PDF statically from frontend folder

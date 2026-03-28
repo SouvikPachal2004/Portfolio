@@ -396,6 +396,8 @@ if (typeof module !== 'undefined') {
     btnLoading.style.display = 'inline-flex';
 
     try {
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 60000); // 60s timeout for cold start
       const res = await fetch(API_URL.replace('/api/contact', '/api/resume-request'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -403,8 +405,10 @@ if (typeof module !== 'undefined') {
           name: nameEl.value.trim(),
           email: emailEl.value.trim(),
           reason: reasonEl.value.trim()
-        })
+        }),
+        signal: controller.signal
       });
+      clearTimeout(timeout);
       const data = await res.json();
       if (data.success) {
         closeModal();
