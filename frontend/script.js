@@ -302,11 +302,15 @@ function validateForm(name, email, message) {
     btnLoading.style.display = 'inline-flex';
 
     try {
+      const contactController = new AbortController();
+      const contactTimeout = setTimeout(() => contactController.abort(), 90000);
       const res = await fetch(API_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name: name.trim(), email: email.trim(), message: message.trim() })
+        body: JSON.stringify({ name: name.trim(), email: email.trim(), message: message.trim() }),
+        signal: contactController.signal
       });
+      clearTimeout(contactTimeout);
       const data = await res.json();
       if (data.success) {
         showToast('✅ Message sent! I\'ll get back to you soon.', 'success');
@@ -397,7 +401,7 @@ if (typeof module !== 'undefined') {
 
     try {
       const controller = new AbortController();
-      const timeout = setTimeout(() => controller.abort(), 60000); // 60s timeout for cold start
+      const timeout = setTimeout(() => controller.abort(), 90000); // 90s timeout for cold start
       const res = await fetch(API_URL.replace('/api/contact', '/api/resume-request'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
