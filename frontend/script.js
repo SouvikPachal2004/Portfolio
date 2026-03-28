@@ -1,6 +1,26 @@
 /* ===== PORTFOLIO SCRIPT — Souvik Pachal ===== */
 
-const API_URL = 'https://portfolio-backend-7ld7.onrender.com/api/contact';
+const API_BASE_URL = window.__PORTFOLIO_API_BASE_URL__
+  || document.body?.dataset?.apiBaseUrl
+  || 'https://portfolio-backend-7ld7.onrender.com';
+
+function apiEndpoint(path) {
+  return `${API_BASE_URL}${path}`;
+}
+
+async function readResponsePayload(response) {
+  const contentType = response.headers.get('content-type') || '';
+
+  if (contentType.includes('application/json')) {
+    return response.json();
+  }
+
+  const text = await response.text();
+  return {
+    success: response.ok,
+    error: text || 'Unexpected server response.'
+  };
+}
 
 /* ===== ENHANCED PARTICLES ===== */
 (function initParticles() {
@@ -304,14 +324,14 @@ function validateForm(name, email, message) {
     try {
       const contactController = new AbortController();
       const contactTimeout = setTimeout(() => contactController.abort(), 90000);
-      const res = await fetch(API_URL, {
+      const res = await fetch(apiEndpoint('/api/contact'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name: name.trim(), email: email.trim(), message: message.trim() }),
         signal: contactController.signal
       });
       clearTimeout(contactTimeout);
-      const data = await res.json();
+      const data = await readResponsePayload(res);
       if (data.success) {
         showToast('✅ Message sent! I\'ll get back to you soon.', 'success');
         form.reset();
@@ -402,7 +422,7 @@ if (typeof module !== 'undefined') {
     try {
       const controller = new AbortController();
       const timeout = setTimeout(() => controller.abort(), 90000); // 90s timeout for cold start
-      const res = await fetch(API_URL.replace('/api/contact', '/api/resume-request'), {
+      const res = await fetch(apiEndpoint('/api/resume-request'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -413,7 +433,7 @@ if (typeof module !== 'undefined') {
         signal: controller.signal
       });
       clearTimeout(timeout);
-      const data = await res.json();
+      const data = await readResponsePayload(res);
       if (data.success) {
         closeModal();
         showToast('✅ Request sent! Souvik will review and email you the resume.', 'success');
