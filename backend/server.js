@@ -124,11 +124,14 @@ function verifySignedToken(token, expectedType) {
 }
 
 function createTransporter() {
+  const smtpPort = parseInt(process.env.SMTP_PORT, 10) || 587;
+  const isSecurePort = smtpPort === 465;
+
   return nodemailer.createTransport({
     host: process.env.SMTP_HOST || 'smtp.gmail.com',
-    port: parseInt(process.env.SMTP_PORT, 10) || 587,
-    secure: false,
-    requireTLS: true,
+    port: smtpPort,
+    secure: isSecurePort,
+    requireTLS: !isSecurePort,
     connectionTimeout: 30000,
     greetingTimeout: 15000,
     socketTimeout: 30000,
