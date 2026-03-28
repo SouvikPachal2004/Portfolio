@@ -16,10 +16,10 @@ const allowedOrigins = process.env.FRONTEND_ORIGIN
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const TOKEN_SECRET = process.env.TOKEN_SECRET || 'replace-me-in-production';
 const OWNER_NAME = process.env.OWNER_NAME || 'Souvik Pachal';
-const OWNER_EMAIL = process.env.OWNER_EMAIL || process.env.RECIPIENT_EMAIL || process.env.RESEND_FROM_EMAIL;
+const OWNER_EMAIL = process.env.OWNER_EMAIL || process.env.RECIPIENT_EMAIL || process.env.BREVO_FROM_EMAIL;
 const OWNER_INBOX = process.env.RECIPIENT_EMAIL || OWNER_EMAIL;
-const RESEND_API_KEY = process.env.RESEND_API_KEY;
-const RESEND_FROM_EMAIL = process.env.RESEND_FROM_EMAIL || OWNER_EMAIL;
+const BREVO_API_KEY = process.env.BREVO_API_KEY;
+const BREVO_FROM_EMAIL = process.env.BREVO_FROM_EMAIL || OWNER_EMAIL;
 const REQUEST_TTL_MS = 3 * 24 * 60 * 60 * 1000;
 const DOWNLOAD_TTL_MS = 7 * 24 * 60 * 60 * 1000;
 const resumePath = path.join(__dirname, '..', 'frontend', 'resume.pdf');
@@ -70,8 +70,8 @@ function getBaseUrl(req) {
 function getMissingMailConfig() {
   const missing = [];
 
-  if (!RESEND_API_KEY) missing.push('RESEND_API_KEY');
-  if (!RESEND_FROM_EMAIL) missing.push('RESEND_FROM_EMAIL');
+  if (!BREVO_API_KEY) missing.push('BREVO_API_KEY');
+  if (!BREVO_FROM_EMAIL) missing.push('BREVO_FROM_EMAIL');
   if (!OWNER_INBOX) missing.push('RECIPIENT_EMAIL or OWNER_EMAIL');
 
   return missing;
@@ -126,24 +126,27 @@ function verifySignedToken(token, expectedType) {
 }
 
 async function sendMail(options) {
-  const response = await fetch('https://api.resend.com/emails', {
+  const response = await fetch('https://api.brevo.com/v3/smtp/email', {
     method: 'POST',
     headers: {
-      Authorization: `Bearer ${RESEND_API_KEY}`,
+      'api-key': BREVO_API_KEY,
       'Content-Type': 'application/json'
     },
     body: JSON.stringify({
-      from: options.from || `${OWNER_NAME} <${RESEND_FROM_EMAIL}>`,
-      to: Array.isArray(options.to) ? options.to : [options.to],
-      reply_to: options.replyTo,
+      sender: {
+        name: OWNER_NAME,
+        email: BREVO_FROM_EMAIL
+      },
+      to: (Array.isArray(options.to) ? options.to : [options.to]).map((email) => ({ email })),
+      replyTo: options.replyTo ? { email: options.replyTo } : undefined,
       subject: options.subject,
-      html: options.html
+      htmlContent: options.html
     })
   });
 
   if (!response.ok) {
     const errorText = await response.text();
-    throw new Error(`Resend API error (${response.status}): ${errorText}`);
+    throw new Error(`Brevo API error (${response.status}): ${errorText}`);
   }
 
   return response.json();
@@ -168,7 +171,6 @@ app.post('/api/contact', contactLimiter, async (req, res) => {
 
   try {
     await sendMail({
-      from: `${OWNER_NAME} <${RESEND_FROM_EMAIL}>`,
       to: OWNER_INBOX,
       replyTo: email.trim(),
       subject: `Portfolio Contact from ${name.trim()}`,
@@ -223,7 +225,6 @@ app.post('/api/resume-request', resumeRequestLimiter, async (req, res) => {
 
   try {
     await sendMail({
-      from: `${OWNER_NAME} <${RESEND_FROM_EMAIL}>`,
       to: OWNER_INBOX,
       replyTo: requesterEmail,
       subject: `[Resume Request] ${requesterName} wants your resume`,
@@ -287,7 +288,6 @@ app.get('/api/approve-resume', async (req, res) => {
 
   try {
     await sendMail({
-      from: `${OWNER_NAME} <${RESEND_FROM_EMAIL}>`,
       to: requesterEmail,
       subject: `Resume Access Approved - ${OWNER_NAME}`,
       html: `

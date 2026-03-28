@@ -6,8 +6,8 @@ global.fetch = mockFetch;
 process.env.TOKEN_SECRET = 'test-secret';
 process.env.BASE_URL = 'https://portfolio-backend-7ld7.onrender.com';
 process.env.RECIPIENT_EMAIL = 'owner@example.com';
-process.env.RESEND_API_KEY = 're_test_key';
-process.env.RESEND_FROM_EMAIL = 'onboarding@resend.dev';
+process.env.BREVO_API_KEY = 'xkeysib-test-key';
+process.env.BREVO_FROM_EMAIL = 'owner@example.com';
 
 const { app } = require('./server');
 
@@ -16,7 +16,7 @@ describe('resume permission flow', () => {
     mockFetch.mockReset();
     mockFetch.mockResolvedValue({
       ok: true,
-      json: async () => ({ id: 'mock-email-id' }),
+      json: async () => ({ messageId: 'mock-email-id' }),
       text: async () => ''
     });
   });
@@ -24,8 +24,8 @@ describe('resume permission flow', () => {
   afterEach(() => {
     process.env.RECIPIENT_EMAIL = 'owner@example.com';
     process.env.OWNER_EMAIL = '';
-    process.env.RESEND_API_KEY = 're_test_key';
-    process.env.RESEND_FROM_EMAIL = 'onboarding@resend.dev';
+    process.env.BREVO_API_KEY = 'xkeysib-test-key';
+    process.env.BREVO_FROM_EMAIL = 'owner@example.com';
   });
 
   it('emails the owner a signed approval link when a resume request is submitted', async () => {
@@ -42,9 +42,9 @@ describe('resume permission flow', () => {
     expect(mockFetch).toHaveBeenCalledTimes(1);
 
     const requestBody = JSON.parse(mockFetch.mock.calls[0][1].body);
-    expect(requestBody.to).toEqual(['owner@example.com']);
-    expect(requestBody.html).toContain('/api/approve-resume?token=');
-    expect(requestBody.html).not.toContain('email=recruiter%40example.com');
+    expect(requestBody.to).toEqual([{ email: 'owner@example.com' }]);
+    expect(requestBody.htmlContent).toContain('/api/approve-resume?token=');
+    expect(requestBody.htmlContent).not.toContain('email=recruiter%40example.com');
   });
 
   it('falls back to OWNER_EMAIL when RECIPIENT_EMAIL is not configured', async () => {
@@ -67,7 +67,7 @@ describe('resume permission flow', () => {
     expect(response.body.success).toBe(true);
 
     const requestBody = JSON.parse(mockFetch.mock.calls[0][1].body);
-    expect(requestBody.to).toEqual(['portfolio-owner@example.com']);
+    expect(requestBody.to).toEqual([{ email: 'portfolio-owner@example.com' }]);
   });
 
   it('approves the request and emails the requester a secure download link', async () => {
@@ -80,7 +80,7 @@ describe('resume permission flow', () => {
       });
 
     const ownerMail = JSON.parse(mockFetch.mock.calls[0][1].body);
-    const tokenMatch = ownerMail.html.match(/approve-resume\?token=([^"]+)/);
+    const tokenMatch = ownerMail.htmlContent.match(/approve-resume\?token=([^"]+)/);
     expect(tokenMatch).toBeTruthy();
 
     mockFetch.mockClear();
@@ -93,8 +93,8 @@ describe('resume permission flow', () => {
     expect(mockFetch).toHaveBeenCalledTimes(1);
 
     const requesterMail = JSON.parse(mockFetch.mock.calls[0][1].body);
-    expect(requesterMail.to).toEqual(['recruiter2@example.com']);
-    expect(requesterMail.html).toContain('/api/download-resume?token=');
+    expect(requesterMail.to).toEqual([{ email: 'recruiter2@example.com' }]);
+    expect(requesterMail.htmlContent).toContain('/api/download-resume?token=');
   });
 
   it('downloads the resume only when a valid signed token is provided', async () => {
@@ -107,14 +107,14 @@ describe('resume permission flow', () => {
       });
 
     const ownerMail = JSON.parse(mockFetch.mock.calls[0][1].body);
-    const approvalToken = ownerMail.html.match(/approve-resume\?token=([^"]+)/)[1];
+    const approvalToken = ownerMail.htmlContent.match(/approve-resume\?token=([^"]+)/)[1];
 
     mockFetch.mockClear();
 
     await request(app).get(`/api/approve-resume?token=${approvalToken}`);
 
     const requesterMail = JSON.parse(mockFetch.mock.calls[0][1].body);
-    const downloadToken = requesterMail.html.match(/download-resume\?token=([^"]+)/)[1];
+    const downloadToken = requesterMail.htmlContent.match(/download-resume\?token=([^"]+)/)[1];
 
     const forbiddenResponse = await request(app).get('/resume.pdf');
     expect(forbiddenResponse.status).toBe(403);
@@ -126,9 +126,9 @@ describe('resume permission flow', () => {
     expect(downloadResponse.headers['content-type']).toContain('application/pdf');
   });
 
-  it('returns a clear config error when Resend config is missing', async () => {
-    process.env.RESEND_API_KEY = '';
-    process.env.RESEND_FROM_EMAIL = '';
+  it('returns a clear config error when Brevo config is missing', async () => {
+    process.env.BREVO_API_KEY = '';
+    process.env.BREVO_FROM_EMAIL = '';
 
     jest.resetModules();
     global.fetch = mockFetch;
@@ -144,7 +144,7 @@ describe('resume permission flow', () => {
 
     expect(response.status).toBe(503);
     expect(response.body.success).toBe(false);
-    expect(response.body.error).toContain('RESEND_API_KEY');
+    expect(response.body.error).toContain('BREVO_API_KEY');
     expect(mockFetch).not.toHaveBeenCalled();
   });
 });
