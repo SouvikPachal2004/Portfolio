@@ -15,9 +15,14 @@ app.use(cors({
   allowedHeaders: ['Content-Type']
 }));
 
+// Health check — must be before static file serving
+app.get('/', (req, res) => {
+  res.json({ status: 'ok', message: 'Portfolio backend is running.' });
+});
+
 // Serve resume PDF statically from frontend folder
 const resumePath = path.join(__dirname, '..', 'frontend', 'resume.pdf');
-app.use('/resume.pdf', (req, res) => {
+app.get('/resume.pdf', (req, res) => {
   if (fs.existsSync(resumePath)) {
     res.sendFile(resumePath);
   } else {
@@ -30,11 +35,6 @@ const contactLimiter = rateLimit({
   windowMs: 10 * 60 * 1000,
   max: 5,
   message: { success: false, error: 'Too many requests. Please try again later.' }
-});
-
-// Health check
-app.get('/', (req, res) => {
-  res.json({ status: 'ok', message: 'Portfolio backend is running.' });
 });
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
