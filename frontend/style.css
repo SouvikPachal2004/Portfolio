@@ -399,6 +399,21 @@ body::before {
   letter-spacing: 1.5px;
   text-transform: uppercase;
   margin-bottom: 0.2rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.leetcode-logo {
+  width: 28px;
+  height: 28px;
+  border-radius: 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 161, 22, 0.12);
+  color: #ffa116;
+  border: 1px solid rgba(255, 161, 22, 0.18);
+  font-size: 0.85rem;
 }
 .leetcode-identity h3 {
   font-size: 1.5rem;
@@ -453,8 +468,23 @@ body::before {
 .leetcode-accent-card strong {
   display: block;
   margin-top: 0.35rem;
-  font-size: 1.3rem;
+  font-size: 1.85rem;
+  line-height: 1.15;
   color: var(--text-primary);
+}
+.leetcode-stat-label {
+  color: var(--accent-light);
+  font-size: 0.84rem;
+  letter-spacing: 1.2px;
+}
+.leetcode-stat {
+  min-height: 112px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.leetcode-stat strong {
+  color: #f3f7ff;
 }
 .leetcode-footer {
   display: grid;
