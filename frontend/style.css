@@ -366,6 +366,8 @@ body::before {
   border-radius: var(--radius-lg);
   padding: 2rem;
   box-shadow: var(--shadow);
+  max-width: 980px;
+  margin: 0 auto;
 }
 .leetcode-head {
   display: flex;
