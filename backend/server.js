@@ -22,7 +22,12 @@ const BREVO_API_KEY = process.env.BREVO_API_KEY;
 const BREVO_FROM_EMAIL = process.env.BREVO_FROM_EMAIL || OWNER_EMAIL;
 const REQUEST_TTL_MS = 3 * 24 * 60 * 60 * 1000;
 const DOWNLOAD_TTL_MS = 7 * 24 * 60 * 60 * 1000;
-const resumePath = path.join(__dirname, '..', 'frontend', 'resume.pdf');
+const resumePathCandidates = [
+  process.env.RESUME_FILE_PATH,
+  path.join(__dirname, 'resume.pdf'),
+  path.join(__dirname, 'assets', 'resume.pdf'),
+  path.join(__dirname, '..', 'frontend', 'resume.pdf')
+].filter(Boolean);
 
 app.use(express.json());
 app.use(cors({
@@ -65,6 +70,10 @@ function escapeHtml(value = '') {
 
 function getBaseUrl(req) {
   return process.env.BASE_URL || `${req.protocol}://${req.get('host')}`;
+}
+
+function getResumePath() {
+  return resumePathCandidates.find((candidate) => fs.existsSync(candidate));
 }
 
 function getMissingMailConfig() {
@@ -340,8 +349,9 @@ app.get('/api/download-resume', (req, res) => {
 
   try {
     const downloadPayload = verifySignedToken(token, 'resume-download');
+    const resumePath = getResumePath();
 
-    if (!fs.existsSync(resumePath)) {
+    if (!resumePath) {
       return res.status(404).send('<h2>Resume not found.</h2>');
     }
 
