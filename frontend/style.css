@@ -385,8 +385,8 @@ body::before {
   height: 72px;
   border-radius: 18px;
   overflow: hidden;
-  background: rgba(255, 161, 22, 0.14);
-  border: 1px solid rgba(255, 161, 22, 0.2);
+  background: rgba(0, 212, 255, 0.08);
+  border: 1px solid var(--border);
 }
 .leetcode-avatar {
   width: 100%;
@@ -394,7 +394,7 @@ body::before {
   object-fit: cover;
 }
 .leetcode-kicker {
-  color: #ffa116;
+  color: var(--accent);
   font-size: 0.82rem;
   letter-spacing: 1.5px;
   text-transform: uppercase;
@@ -413,8 +413,8 @@ body::before {
   text-align: center;
   padding: 1rem 1.2rem;
   border-radius: var(--radius);
-  background: rgba(255, 161, 22, 0.08);
-  border: 1px solid rgba(255, 161, 22, 0.16);
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
 }
 .leetcode-rank-box span,
 .leetcode-meta-label,
@@ -426,7 +426,7 @@ body::before {
   letter-spacing: 1px;
 }
 .leetcode-rank-box strong {
-  color: #ffa116;
+  color: var(--accent-light);
   font-size: 1.8rem;
 }
 .leetcode-stats-grid {
