@@ -8,6 +8,8 @@ function apiEndpoint(path) {
   return `${API_BASE_URL}${path}`;
 }
 
+const LEETCODE_PROFILE_URL = 'https://leetcode.com/u/SouvikPachal/';
+
 async function readResponsePayload(response) {
   const contentType = response.headers.get('content-type') || '';
 
@@ -247,7 +249,9 @@ function toggleBackToTop() {
 /* ===== SMOOTH SCROLL ===== */
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
   anchor.addEventListener('click', function (e) {
-    const target = document.querySelector(this.getAttribute('href'));
+    const href = this.getAttribute('href');
+    if (!href || href === '#') return;
+    const target = document.querySelector(href);
     if (target) {
       e.preventDefault();
       target.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -262,6 +266,76 @@ function showToast(message, type = 'success') {
   toast.className = `toast ${type} show`;
   setTimeout(() => { toast.className = 'toast'; }, 4000);
 }
+
+/* ===== VIEWER COUNT ===== */
+(function initViewerCount() {
+  const viewerCountEl = document.getElementById('viewer-count');
+  if (!viewerCountEl) return;
+
+  const storageKey = 'portfolio_viewer_id';
+  let visitorId = localStorage.getItem(storageKey);
+  if (!visitorId) {
+    visitorId = `viewer_${Date.now()}_${Math.random().toString(36).slice(2, 10)}`;
+    localStorage.setItem(storageKey, visitorId);
+  }
+
+  fetch(apiEndpoint('/api/viewer-count'), { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ visitorId }) })
+    .then(readResponsePayload)
+    .then((data) => {
+      if (data.success && typeof data.total === 'number') {
+        viewerCountEl.textContent = data.total.toLocaleString();
+      }
+    })
+    .catch(() => {
+      viewerCountEl.textContent = '--';
+    });
+})();
+
+/* ===== LEETCODE PROFILE ===== */
+(function initLeetCodeProfile() {
+  const nameEl = document.getElementById('leetcode-name');
+  if (!nameEl) return;
+
+  const avatarEl = document.getElementById('leetcode-avatar');
+  const profileLinkEl = document.getElementById('leetcode-profile-link');
+  const usernameEl = document.getElementById('leetcode-username');
+  const rankingEl = document.getElementById('leetcode-ranking');
+  const totalSolvedEl = document.getElementById('leetcode-total-solved');
+  const easySolvedEl = document.getElementById('leetcode-easy-solved');
+  const mediumSolvedEl = document.getElementById('leetcode-medium-solved');
+  const hardSolvedEl = document.getElementById('leetcode-hard-solved');
+  const ratingEl = document.getElementById('leetcode-rating');
+  const contestsEl = document.getElementById('leetcode-contests');
+  const reputationEl = document.getElementById('leetcode-reputation');
+  const topPercentageEl = document.getElementById('leetcode-top-percentage');
+
+  if (profileLinkEl) profileLinkEl.href = LEETCODE_PROFILE_URL;
+
+  fetch(apiEndpoint('/api/leetcode-profile'))
+    .then(readResponsePayload)
+    .then((data) => {
+      if (!data.success) throw new Error(data.error || 'Failed to load LeetCode profile.');
+
+      const profile = data.profile || {};
+      const contest = data.contest || {};
+
+      nameEl.textContent = profile.realName || data.username || 'Souvik Pachal';
+      if (avatarEl && profile.userAvatar) avatarEl.src = profile.userAvatar;
+      if (usernameEl) usernameEl.textContent = `@${data.username || 'SouvikPachal'}`;
+      if (rankingEl) rankingEl.textContent = profile.ranking ? `#${Number(profile.ranking).toLocaleString()}` : '--';
+      if (totalSolvedEl) totalSolvedEl.textContent = (data.solved?.all ?? '--').toLocaleString?.() || data.solved?.all || '--';
+      if (easySolvedEl) easySolvedEl.textContent = (data.solved?.easy ?? '--').toLocaleString?.() || data.solved?.easy || '--';
+      if (mediumSolvedEl) mediumSolvedEl.textContent = (data.solved?.medium ?? '--').toLocaleString?.() || data.solved?.medium || '--';
+      if (hardSolvedEl) hardSolvedEl.textContent = (data.solved?.hard ?? '--').toLocaleString?.() || data.solved?.hard || '--';
+      if (ratingEl) ratingEl.textContent = contest.rating ? Math.round(contest.rating) : '--';
+      if (contestsEl) contestsEl.textContent = contest.attendedContestsCount || '--';
+      if (reputationEl) reputationEl.textContent = profile.reputation || '--';
+      if (topPercentageEl) topPercentageEl.textContent = contest.topPercentage ? `${Number(contest.topPercentage).toFixed(2)}%` : '--';
+    })
+    .catch(() => {
+      nameEl.textContent = 'LeetCode profile unavailable right now';
+    });
+})();
 
 /* ===== FORM VALIDATION ===== */
 function validateForm(name, email, message) {

@@ -278,6 +278,44 @@ body::before {
   margin-bottom: 2rem;
   animation: fadeInDown 0.8s 0.4s ease both;
 }
+.hero-viewers {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1.8rem;
+  animation: fadeInDown 0.8s 0.45s ease both;
+}
+.viewer-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.9rem;
+  padding: 0.9rem 1.2rem;
+  background: rgba(13, 22, 40, 0.92);
+  border: 1px solid var(--border-hover);
+  border-radius: 999px;
+  box-shadow: var(--shadow-accent);
+}
+.viewer-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--accent);
+  background: rgba(0, 212, 255, 0.12);
+}
+.viewer-label {
+  display: block;
+  color: var(--text-muted);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+.viewer-chip strong {
+  display: block;
+  color: var(--text-primary);
+  font-size: 1.2rem;
+}
 .hero-socials {
   display: flex;
   gap: 1rem;
@@ -315,6 +353,107 @@ body::before {
   transition: var(--transition);
 }
 .scroll-down a:hover { color: var(--accent); }
+
+/* ===== LEETCODE ===== */
+.leetcode {
+  background: linear-gradient(180deg, rgba(10, 17, 32, 0.95), rgba(6, 11, 20, 0.98));
+}
+.leetcode-card {
+  background:
+    radial-gradient(circle at top right, rgba(0, 212, 255, 0.1), transparent 35%),
+    linear-gradient(135deg, rgba(13, 22, 40, 0.96), rgba(8, 16, 31, 0.98));
+  border: 1px solid var(--border-hover);
+  border-radius: 28px;
+  padding: 2rem;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.45);
+}
+.leetcode-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 1.5rem;
+  align-items: center;
+  margin-bottom: 1.8rem;
+  flex-wrap: wrap;
+}
+.leetcode-identity {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+.leetcode-avatar-wrap {
+  width: 72px;
+  height: 72px;
+  border-radius: 20px;
+  overflow: hidden;
+  background: rgba(255, 161, 22, 0.14);
+  border: 1px solid rgba(255, 161, 22, 0.25);
+}
+.leetcode-avatar {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.leetcode-kicker {
+  color: #ffa116;
+  font-size: 0.82rem;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  margin-bottom: 0.2rem;
+}
+.leetcode-identity h3 {
+  font-size: 1.5rem;
+  margin-bottom: 0.2rem;
+}
+.leetcode-identity a {
+  color: var(--accent-light);
+  font-size: 0.92rem;
+}
+.leetcode-rank-box {
+  min-width: 160px;
+  text-align: center;
+  padding: 1rem 1.2rem;
+  border-radius: 20px;
+  background: rgba(255, 161, 22, 0.1);
+  border: 1px solid rgba(255, 161, 22, 0.2);
+}
+.leetcode-rank-box span,
+.leetcode-meta-label,
+.leetcode-stat-label {
+  display: block;
+  color: var(--text-muted);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+.leetcode-rank-box strong {
+  color: #ffa116;
+  font-size: 1.8rem;
+}
+.leetcode-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+.leetcode-stat,
+.leetcode-meta > div {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 1rem;
+}
+.leetcode-stat strong,
+.leetcode-meta strong {
+  display: block;
+  margin-top: 0.35rem;
+  font-size: 1.3rem;
+  color: var(--text-primary);
+}
+.leetcode-meta {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 1rem;
+}
 
 /* ===== ABOUT ===== */
 .about { background: var(--bg-secondary); }
@@ -889,9 +1028,13 @@ body::before {
   .hamburger { display: flex; z-index: 1000; }
   .btn-resume, .btn-resume-2 { display: none; }
   .hero-btns { flex-direction: column; align-items: center; }
+  .hero-viewers { margin-bottom: 1.4rem; }
+  .viewer-chip { width: 100%; max-width: 280px; justify-content: center; }
   .timeline { padding-left: 1.5rem; }
   .footer-content { flex-direction: column; text-align: center; }
   .back-to-top { position: static; margin: 1rem auto 0; }
+  .leetcode-head,
+  .leetcode-identity { flex-direction: column; text-align: center; }
 }
 @media (max-width: 480px) {
   .about-stats { grid-template-columns: repeat(2, 1fr); }

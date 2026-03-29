@@ -22,6 +22,10 @@ const BREVO_API_KEY = process.env.BREVO_API_KEY;
 const BREVO_FROM_EMAIL = process.env.BREVO_FROM_EMAIL || OWNER_EMAIL;
 const REQUEST_TTL_MS = 3 * 24 * 60 * 60 * 1000;
 const DOWNLOAD_TTL_MS = 7 * 24 * 60 * 60 * 1000;
+const LEETCODE_USERNAME = process.env.LEETCODE_USERNAME || 'SouvikPachal';
+const GOOGLE_DRIVE_RESUME_URL = process.env.GOOGLE_DRIVE_RESUME_URL
+  || 'https://drive.google.com/file/d/1CladXwfkrRcYJfF_0HNTH7hTcTs4A5L-/view?usp=drive_link';
+const viewerStorePath = path.join(__dirname, 'viewer-count.json');
 const resumePathCandidates = [
   process.env.RESUME_FILE_PATH,
   path.join(__dirname, 'resume.pdf'),
@@ -45,6 +49,39 @@ app.get('/resume.pdf', (req, res) => {
     success: false,
     error: 'Direct resume access is disabled. Please request access from the portfolio website.'
   });
+});
+
+app.get('/api/viewer-count', (req, res) => {
+  const store = readViewerStore();
+  res.json({ success: true, total: store.total });
+});
+
+app.post('/api/viewer-count', (req, res) => {
+  const visitorId = String(req.body?.visitorId || '').trim();
+  if (!visitorId) {
+    return res.status(400).json({ success: false, error: 'visitorId is required.' });
+  }
+
+  const store = readViewerStore();
+  if (!store.visitors[visitorId]) {
+    store.visitors[visitorId] = new Date().toISOString();
+    store.total += 1;
+    writeViewerStore(store);
+  }
+
+  return res.json({ success: true, total: store.total });
+});
+
+app.get('/api/leetcode-profile', async (req, res) => {
+  const username = String(req.query.username || LEETCODE_USERNAME).trim();
+
+  try {
+    const profile = await fetchLeetCodeProfile(username);
+    return res.json({ success: true, ...profile });
+  } catch (err) {
+    console.error('LeetCode profile error:', err.message);
+    return res.status(500).json({ success: false, error: 'Failed to load LeetCode profile.' });
+  }
 });
 
 const contactLimiter = rateLimit({
@@ -74,6 +111,26 @@ function getBaseUrl(req) {
 
 function getResumePath() {
   return resumePathCandidates.find((candidate) => fs.existsSync(candidate));
+}
+
+function readViewerStore() {
+  try {
+    if (!fs.existsSync(viewerStorePath)) {
+      return { total: 0, visitors: {} };
+    }
+
+    const parsed = JSON.parse(fs.readFileSync(viewerStorePath, 'utf8'));
+    return {
+      total: Number(parsed.total) || 0,
+      visitors: parsed.visitors && typeof parsed.visitors === 'object' ? parsed.visitors : {}
+    };
+  } catch {
+    return { total: 0, visitors: {} };
+  }
+}
+
+function writeViewerStore(store) {
+  fs.writeFileSync(viewerStorePath, JSON.stringify(store, null, 2));
 }
 
 function getMissingMailConfig() {
@@ -159,6 +216,78 @@ async function sendMail(options) {
   }
 
   return response.json();
+}
+
+async function fetchLeetCodeProfile(username) {
+  const query = `
+    query userPublicProfile($username: String!) {
+      matchedUser(username: $username) {
+        username
+        profile {
+          realName
+          userAvatar
+          ranking
+          reputation
+          starRating
+          countryName
+          company
+          school
+        }
+        submitStatsGlobal {
+          acSubmissionNum {
+            difficulty
+            count
+            submissions
+          }
+        }
+      }
+      userContestRanking(username: $username) {
+        attendedContestsCount
+        rating
+        globalRanking
+        topPercentage
+      }
+    }
+  `;
+
+  const response = await fetch('https://leetcode.com/graphql', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Referer: `https://leetcode.com/u/${username}/`,
+      Origin: 'https://leetcode.com'
+    },
+    body: JSON.stringify({
+      query,
+      variables: { username }
+    })
+  });
+
+  if (!response.ok) {
+    throw new Error(`LeetCode API error (${response.status})`);
+  }
+
+  const payload = await response.json();
+  if (payload.errors?.length) {
+    throw new Error(payload.errors[0].message || 'Failed to load LeetCode profile.');
+  }
+
+  const user = payload.data?.matchedUser;
+  const contest = payload.data?.userContestRanking;
+  const solvedStats = user?.submitStatsGlobal?.acSubmissionNum || [];
+  const getSolved = (difficulty) => solvedStats.find((item) => item.difficulty === difficulty)?.count || 0;
+
+  return {
+    username: user?.username || username,
+    profile: user?.profile || {},
+    contest: contest || null,
+    solved: {
+      all: getSolved('All'),
+      easy: getSolved('Easy'),
+      medium: getSolved('Medium'),
+      hard: getSolved('Hard')
+    }
+  };
 }
 
 app.post('/api/contact', contactLimiter, async (req, res) => {
@@ -348,7 +477,12 @@ app.get('/api/download-resume', (req, res) => {
   const { token } = req.query;
 
   try {
-    const downloadPayload = verifySignedToken(token, 'resume-download');
+    verifySignedToken(token, 'resume-download');
+
+    if (GOOGLE_DRIVE_RESUME_URL) {
+      return res.redirect(302, GOOGLE_DRIVE_RESUME_URL);
+    }
+
     const resumePath = getResumePath();
 
     if (!resumePath) {
@@ -359,7 +493,6 @@ app.get('/api/download-resume', (req, res) => {
     res.setHeader('Content-Disposition', `attachment; filename="${OWNER_NAME.replace(/\s+/g, '_')}_Resume.pdf"`);
     res.setHeader('Cache-Control', 'private, no-store');
     res.setHeader('X-Resume-Owner', OWNER_NAME);
-    res.setHeader('X-Resume-Recipient', downloadPayload.email);
 
     return res.sendFile(resumePath);
   } catch (err) {

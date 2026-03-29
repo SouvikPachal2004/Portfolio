@@ -52,6 +52,7 @@
       <li><a href="#home" class="nav-link active">Home</a></li>
       <li><a href="#about" class="nav-link">About</a></li>
       <li><a href="#skills" class="nav-link">Skills</a></li>
+      <li><a href="#leetcode" class="nav-link">LeetCode</a></li>
       <li><a href="#experience" class="nav-link">Experience</a></li>
       <li><a href="#projects" class="nav-link">Projects</a></li>
       <li><a href="#contact" class="nav-link">Contact</a></li>
@@ -71,6 +72,15 @@
         <a href="#projects" class="btn btn-primary">View My Work <i class="fas fa-arrow-right"></i></a>
         <a href="#contact" class="btn btn-outline">Contact Me <i class="fas fa-envelope"></i></a>
       </div>
+      <div class="hero-viewers">
+        <div class="viewer-chip">
+          <span class="viewer-icon"><i class="fas fa-eye"></i></span>
+          <div>
+            <span class="viewer-label">Total Viewers</span>
+            <strong id="viewer-count">0</strong>
+          </div>
+        </div>
+      </div>
       <div class="hero-socials">
         <a href="https://github.com/SouvikPachal2004" target="_blank" rel="noopener" aria-label="GitHub"><i class="fab fa-github"></i></a>
         <a href="https://www.linkedin.com/in/souvik-pachal-b7a8b5290/" target="_blank" rel="noopener" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
@@ -78,6 +88,75 @@
       </div>
     </div>
     <div class="scroll-down"><a href="#about"><i class="fas fa-chevron-down"></i></a></div>
+  </section>
+
+  <section id="leetcode" class="leetcode section">
+    <div class="container">
+      <div class="section-header reveal">
+        <span class="section-tag">Coding Profile</span>
+        <h2 class="section-title">LeetCode Snapshot</h2>
+      </div>
+      <div class="leetcode-card reveal">
+        <div class="leetcode-head">
+          <div class="leetcode-identity">
+            <div class="leetcode-avatar-wrap">
+              <img id="leetcode-avatar" src="" alt="LeetCode avatar" class="leetcode-avatar" />
+            </div>
+            <div>
+              <p class="leetcode-kicker">Live from LeetCode</p>
+              <h3 id="leetcode-name">Loading profile...</h3>
+              <a id="leetcode-profile-link" href="https://leetcode.com/u/SouvikPachal/" target="_blank" rel="noopener">leetcode.com/u/SouvikPachal</a>
+            </div>
+          </div>
+          <div class="leetcode-rank-box">
+            <span>Global Rank</span>
+            <strong id="leetcode-ranking">--</strong>
+          </div>
+        </div>
+
+        <div class="leetcode-stats-grid">
+          <div class="leetcode-stat">
+            <span class="leetcode-stat-label">Solved</span>
+            <strong id="leetcode-total-solved">--</strong>
+          </div>
+          <div class="leetcode-stat">
+            <span class="leetcode-stat-label">Easy</span>
+            <strong id="leetcode-easy-solved">--</strong>
+          </div>
+          <div class="leetcode-stat">
+            <span class="leetcode-stat-label">Medium</span>
+            <strong id="leetcode-medium-solved">--</strong>
+          </div>
+          <div class="leetcode-stat">
+            <span class="leetcode-stat-label">Hard</span>
+            <strong id="leetcode-hard-solved">--</strong>
+          </div>
+          <div class="leetcode-stat">
+            <span class="leetcode-stat-label">Contest Rating</span>
+            <strong id="leetcode-rating">--</strong>
+          </div>
+          <div class="leetcode-stat">
+            <span class="leetcode-stat-label">Contests</span>
+            <strong id="leetcode-contests">--</strong>
+          </div>
+        </div>
+
+        <div class="leetcode-meta">
+          <div>
+            <span class="leetcode-meta-label">Reputation</span>
+            <strong id="leetcode-reputation">--</strong>
+          </div>
+          <div>
+            <span class="leetcode-meta-label">Top Percentage</span>
+            <strong id="leetcode-top-percentage">--</strong>
+          </div>
+          <div>
+            <span class="leetcode-meta-label">Profile</span>
+            <strong id="leetcode-username">@SouvikPachal</strong>
+          </div>
+        </div>
+      </div>
+    </div>
   </section>
 
   <!-- About -->

@@ -122,8 +122,8 @@ describe('resume permission flow', () => {
     const downloadResponse = await request(app)
       .get(`/api/download-resume?token=${downloadToken}`);
 
-    expect(downloadResponse.status).toBe(200);
-    expect(downloadResponse.headers['content-type']).toContain('application/pdf');
+    expect(downloadResponse.status).toBe(302);
+    expect(downloadResponse.headers.location).toContain('drive.google.com');
   });
 
   it('returns a clear config error when Brevo config is missing', async () => {
