@@ -281,40 +281,42 @@ body::before {
 .hero-viewers {
   display: flex;
   justify-content: center;
-  margin-bottom: 1.8rem;
+  margin-bottom: 1.4rem;
   animation: fadeInDown 0.8s 0.45s ease both;
 }
 .viewer-chip {
   display: inline-flex;
   align-items: center;
-  gap: 0.9rem;
-  padding: 0.9rem 1.2rem;
-  background: rgba(13, 22, 40, 0.92);
-  border: 1px solid var(--border-hover);
-  border-radius: 999px;
-  box-shadow: var(--shadow-accent);
+  gap: 0.7rem;
+  padding: 0.65rem 1rem;
+  background: rgba(13, 22, 40, 0.86);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.24);
 }
 .viewer-icon {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  border-radius: 10px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   color: var(--accent);
-  background: rgba(0, 212, 255, 0.12);
+  background: rgba(0, 212, 255, 0.1);
+  font-size: 0.85rem;
 }
 .viewer-label {
-  display: block;
-  color: var(--text-muted);
-  font-size: 0.72rem;
+  color: var(--text-secondary);
+  font-size: 0.78rem;
   text-transform: uppercase;
   letter-spacing: 1px;
 }
 .viewer-chip strong {
-  display: block;
+  display: inline-block;
   color: var(--text-primary);
-  font-size: 1.2rem;
+  font-size: 1rem;
+  min-width: 1.5rem;
+  text-align: right;
 }
 .hero-socials {
   display: flex;
@@ -359,13 +361,11 @@ body::before {
   background: linear-gradient(180deg, rgba(10, 17, 32, 0.95), rgba(6, 11, 20, 0.98));
 }
 .leetcode-card {
-  background:
-    radial-gradient(circle at top right, rgba(0, 212, 255, 0.1), transparent 35%),
-    linear-gradient(135deg, rgba(13, 22, 40, 0.96), rgba(8, 16, 31, 0.98));
-  border: 1px solid var(--border-hover);
-  border-radius: 28px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
   padding: 2rem;
-  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.45);
+  box-shadow: var(--shadow);
 }
 .leetcode-head {
   display: flex;
@@ -383,10 +383,10 @@ body::before {
 .leetcode-avatar-wrap {
   width: 72px;
   height: 72px;
-  border-radius: 20px;
+  border-radius: 18px;
   overflow: hidden;
   background: rgba(255, 161, 22, 0.14);
-  border: 1px solid rgba(255, 161, 22, 0.25);
+  border: 1px solid rgba(255, 161, 22, 0.2);
 }
 .leetcode-avatar {
   width: 100%;
@@ -409,12 +409,12 @@ body::before {
   font-size: 0.92rem;
 }
 .leetcode-rank-box {
-  min-width: 160px;
+  min-width: 170px;
   text-align: center;
   padding: 1rem 1.2rem;
-  border-radius: 20px;
-  background: rgba(255, 161, 22, 0.1);
-  border: 1px solid rgba(255, 161, 22, 0.2);
+  border-radius: var(--radius);
+  background: rgba(255, 161, 22, 0.08);
+  border: 1px solid rgba(255, 161, 22, 0.16);
 }
 .leetcode-rank-box span,
 .leetcode-meta-label,
@@ -431,28 +431,41 @@ body::before {
 }
 .leetcode-stats-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 1rem;
-  margin-bottom: 1rem;
+  margin-bottom: 1.2rem;
 }
 .leetcode-stat,
-.leetcode-meta > div {
-  background: rgba(255, 255, 255, 0.03);
+.leetcode-accent-card {
+  background: var(--bg-secondary);
   border: 1px solid var(--border);
-  border-radius: 18px;
+  border-radius: var(--radius);
   padding: 1rem;
+  transition: var(--transition);
+}
+.leetcode-stat:hover,
+.leetcode-accent-card:hover {
+  border-color: var(--border-hover);
+  box-shadow: var(--shadow-accent);
+  transform: translateY(-3px);
 }
 .leetcode-stat strong,
-.leetcode-meta strong {
+.leetcode-accent-card strong {
   display: block;
   margin-top: 0.35rem;
   font-size: 1.3rem;
   color: var(--text-primary);
 }
-.leetcode-meta {
+.leetcode-footer {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 1rem;
+}
+.leetcode-accent-card p {
+  margin-top: 0.45rem;
+  color: var(--text-secondary);
+  font-size: 0.88rem;
+  line-height: 1.6;
 }
 
 /* ===== ABOUT ===== */
@@ -1029,12 +1042,14 @@ body::before {
   .btn-resume, .btn-resume-2 { display: none; }
   .hero-btns { flex-direction: column; align-items: center; }
   .hero-viewers { margin-bottom: 1.4rem; }
-  .viewer-chip { width: 100%; max-width: 280px; justify-content: center; }
+  .viewer-chip { width: auto; max-width: none; justify-content: center; }
   .timeline { padding-left: 1.5rem; }
   .footer-content { flex-direction: column; text-align: center; }
   .back-to-top { position: static; margin: 1rem auto 0; }
   .leetcode-head,
   .leetcode-identity { flex-direction: column; text-align: center; }
+  .leetcode-stats-grid,
+  .leetcode-footer { grid-template-columns: 1fr; }
 }
 @media (max-width: 480px) {
   .about-stats { grid-template-columns: repeat(2, 1fr); }

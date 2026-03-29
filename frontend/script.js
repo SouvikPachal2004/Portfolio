@@ -306,7 +306,6 @@ function showToast(message, type = 'success') {
   const hardSolvedEl = document.getElementById('leetcode-hard-solved');
   const ratingEl = document.getElementById('leetcode-rating');
   const contestsEl = document.getElementById('leetcode-contests');
-  const reputationEl = document.getElementById('leetcode-reputation');
   const topPercentageEl = document.getElementById('leetcode-top-percentage');
 
   if (profileLinkEl) profileLinkEl.href = LEETCODE_PROFILE_URL;
@@ -329,7 +328,6 @@ function showToast(message, type = 'success') {
       if (hardSolvedEl) hardSolvedEl.textContent = (data.solved?.hard ?? '--').toLocaleString?.() || data.solved?.hard || '--';
       if (ratingEl) ratingEl.textContent = contest.rating ? Math.round(contest.rating) : '--';
       if (contestsEl) contestsEl.textContent = contest.attendedContestsCount || '--';
-      if (reputationEl) reputationEl.textContent = profile.reputation || '--';
       if (topPercentageEl) topPercentageEl.textContent = contest.topPercentage ? `${Number(contest.topPercentage).toFixed(2)}%` : '--';
     })
     .catch(() => {

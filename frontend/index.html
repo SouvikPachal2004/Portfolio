@@ -73,12 +73,10 @@
         <a href="#contact" class="btn btn-outline">Contact Me <i class="fas fa-envelope"></i></a>
       </div>
       <div class="hero-viewers">
-        <div class="viewer-chip">
+        <div class="viewer-chip" aria-label="Total portfolio viewers">
+          <span class="viewer-label">Viewers</span>
+          <strong id="viewer-count">0</strong>
           <span class="viewer-icon"><i class="fas fa-eye"></i></span>
-          <div>
-            <span class="viewer-label">Total Viewers</span>
-            <strong id="viewer-count">0</strong>
-          </div>
         </div>
       </div>
       <div class="hero-socials">
@@ -141,22 +139,19 @@
           </div>
         </div>
 
-        <div class="leetcode-meta">
-          <div>
-            <span class="leetcode-meta-label">Reputation</span>
-            <strong id="leetcode-reputation">--</strong>
-          </div>
-          <div>
-            <span class="leetcode-meta-label">Top Percentage</span>
-            <strong id="leetcode-top-percentage">--</strong>
-          </div>
-          <div>
+        <div class="leetcode-footer">
+          <div class="leetcode-accent-card">
             <span class="leetcode-meta-label">Profile</span>
             <strong id="leetcode-username">@SouvikPachal</strong>
+            <p>Competitive programming progress updated live from your public profile.</p>
+          </div>
+          <div class="leetcode-accent-card">
+            <span class="leetcode-meta-label">Top Percentage</span>
+            <strong id="leetcode-top-percentage">--</strong>
+            <p>Contest percentile among active LeetCode participants.</p>
           </div>
         </div>
       </div>
-    </div>
   </section>
 
   <!-- About -->
