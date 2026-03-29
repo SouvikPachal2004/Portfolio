@@ -24,6 +24,35 @@ async function readResponsePayload(response) {
   };
 }
 
+async function requestJson(path, options = {}, retries = 1) {
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), options.timeoutMs || 12000);
+
+  try {
+    const response = await fetch(apiEndpoint(path), {
+      ...options,
+      cache: 'no-store',
+      signal: controller.signal
+    });
+
+    clearTimeout(timeoutId);
+    const data = await readResponsePayload(response);
+
+    if (!response.ok || data.success === false) {
+      throw new Error(data.error || `Request failed with status ${response.status}`);
+    }
+
+    return data;
+  } catch (error) {
+    clearTimeout(timeoutId);
+    if (retries > 0) {
+      await new Promise((resolve) => setTimeout(resolve, 1200));
+      return requestJson(path, options, retries - 1);
+    }
+    throw error;
+  }
+}
+
 /* ===== ENHANCED PARTICLES ===== */
 (function initParticles() {
   const canvas = document.getElementById('particles-canvas');
@@ -273,21 +302,36 @@ function showToast(message, type = 'success') {
   if (!viewerCountEl) return;
 
   const storageKey = 'portfolio_viewer_id';
-  let visitorId = localStorage.getItem(storageKey);
-  if (!visitorId) {
+  let visitorId = null;
+
+  try {
+    visitorId = localStorage.getItem(storageKey);
+    if (!visitorId) {
+      visitorId = `viewer_${Date.now()}_${Math.random().toString(36).slice(2, 10)}`;
+      localStorage.setItem(storageKey, visitorId);
+    }
+  } catch {
     visitorId = `viewer_${Date.now()}_${Math.random().toString(36).slice(2, 10)}`;
-    localStorage.setItem(storageKey, visitorId);
   }
 
-  fetch(apiEndpoint('/api/viewer-count'), { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ visitorId }) })
-    .then(readResponsePayload)
+  requestJson('/api/viewer-count', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ visitorId })
+  }, 2)
     .then((data) => {
-      if (data.success && typeof data.total === 'number') {
+      if (typeof data.total === 'number') {
         viewerCountEl.textContent = data.total.toLocaleString();
       }
     })
     .catch(() => {
-      viewerCountEl.textContent = '--';
+      requestJson('/api/viewer-count', { method: 'GET' }, 1)
+        .then((data) => {
+          viewerCountEl.textContent = typeof data.total === 'number' ? data.total.toLocaleString() : '0';
+        })
+        .catch(() => {
+          viewerCountEl.textContent = '0';
+        });
     });
 })();
 
@@ -310,11 +354,8 @@ function showToast(message, type = 'success') {
 
   if (profileLinkEl) profileLinkEl.href = LEETCODE_PROFILE_URL;
 
-  fetch(apiEndpoint('/api/leetcode-profile'))
-    .then(readResponsePayload)
+  requestJson('/api/leetcode-profile', { method: 'GET' }, 2)
     .then((data) => {
-      if (!data.success) throw new Error(data.error || 'Failed to load LeetCode profile.');
-
       const profile = data.profile || {};
       const contest = data.contest || {};
 
@@ -332,6 +373,14 @@ function showToast(message, type = 'success') {
     })
     .catch(() => {
       nameEl.textContent = 'LeetCode profile unavailable right now';
+      if (rankingEl) rankingEl.textContent = '--';
+      if (totalSolvedEl) totalSolvedEl.textContent = '--';
+      if (easySolvedEl) easySolvedEl.textContent = '--';
+      if (mediumSolvedEl) mediumSolvedEl.textContent = '--';
+      if (hardSolvedEl) hardSolvedEl.textContent = '--';
+      if (ratingEl) ratingEl.textContent = '--';
+      if (contestsEl) contestsEl.textContent = '--';
+      if (topPercentageEl) topPercentageEl.textContent = '--';
     });
 })();
 
