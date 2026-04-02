@@ -24,6 +24,40 @@
   --font-code: 'Fira Code', monospace;
 }
 
+/* ===== LIGHT THEME VARIABLES ===== */
+body.light-theme {
+  --bg-primary: #f0f4f8;
+  --bg-secondary: #e2eaf4;
+  --bg-card: #ffffff;
+  --bg-card-hover: #f5f8fc;
+  --accent: #0284c7;
+  --accent-2: #0ea5e9;
+  --accent-light: #0369a1;
+  --accent-glow: rgba(2, 132, 199, 0.12);
+  --text-primary: #0f172a;
+  --text-secondary: #334155;
+  --text-muted: #64748b;
+  --border: rgba(2, 132, 199, 0.18);
+  --border-hover: rgba(2, 132, 199, 0.5);
+  --gradient: linear-gradient(135deg, #0284c7, #0ea5e9, #3b82f6);
+  --gradient-2: linear-gradient(135deg, #0284c7, #06b6d4);
+  --shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+  --shadow-accent: 0 8px 32px rgba(2, 132, 199, 0.18);
+}
+
+body.light-theme::before {
+  background:
+    radial-gradient(ellipse 80% 60% at 20% 20%, rgba(2, 132, 199, 0.08) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 80% at 80% 80%, rgba(59, 130, 246, 0.08) 0%, transparent 60%),
+    radial-gradient(ellipse 70% 50% at 50% 50%, rgba(14, 165, 233, 0.05) 0%, transparent 70%);
+}
+
+body.light-theme .navbar.scrolled {
+  background: rgba(240, 244, 248, 0.9);
+}
+
+body.light-theme #particles-canvas { opacity: 0.4; }
+
 /* ===== RESET & BASE ===== */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; font-size: 16px; }
@@ -146,6 +180,27 @@ body::before {
 .btn-resume-2:hover {
   background: var(--accent-2);
   color: #fff;
+}
+.btn-theme-toggle {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  background: transparent;
+  border: 1px solid var(--accent);
+  color: var(--accent);
+  font-size: 0.95rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition);
+  margin-right: 0.4rem;
+  flex-shrink: 0;
+}
+.btn-theme-toggle:hover {
+  background: var(--accent);
+  color: #fff;
+  box-shadow: var(--shadow-accent);
 }
 .hamburger {
   display: none;
@@ -1071,7 +1126,7 @@ body::before {
   .nav-links.open { right: 0; }
   .nav-links a { font-size: 1.1rem; }
   .hamburger { display: flex; z-index: 1000; }
-  .btn-resume, .btn-resume-2 { display: none; }
+  .btn-resume, .btn-resume-2, .btn-theme-toggle { display: none; }
   .hero-btns { flex-direction: column; align-items: center; }
   .hero-viewers { margin-bottom: 1.4rem; }
   .viewer-chip { width: auto; max-width: none; justify-content: center; }

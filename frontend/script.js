@@ -473,6 +473,37 @@ if (typeof module !== 'undefined') {
   module.exports = { validateForm, nextRole };
 }
 
+/* ===== THEME TOGGLE ===== */
+(function initThemeToggle() {
+  const btn = document.getElementById('theme-toggle-btn');
+  if (!btn) return;
+
+  const STORAGE_KEY = 'portfolio_theme';
+  const icon = btn.querySelector('i');
+
+  function applyTheme(theme) {
+    if (theme === 'light') {
+      document.body.classList.add('light-theme');
+      icon.className = 'fas fa-moon';
+      btn.title = 'Switch to dark theme';
+    } else {
+      document.body.classList.remove('light-theme');
+      icon.className = 'fas fa-sun';
+      btn.title = 'Switch to light theme';
+    }
+  }
+
+  const saved = localStorage.getItem(STORAGE_KEY) || 'dark';
+  applyTheme(saved);
+
+  btn.addEventListener('click', () => {
+    const isLight = document.body.classList.contains('light-theme');
+    const next = isLight ? 'dark' : 'light';
+    localStorage.setItem(STORAGE_KEY, next);
+    applyTheme(next);
+  });
+})();
+
 /* ===== RESUME PERMISSION MODAL ===== */
 (function initResumeModal() {
   const modal = document.getElementById('resume-modal');
