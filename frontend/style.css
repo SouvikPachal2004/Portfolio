@@ -58,6 +58,30 @@ body.light-theme .navbar.scrolled {
 
 body.light-theme #particles-canvas { opacity: 0.4; }
 
+/* LeetCode section light theme fixes */
+body.light-theme .leetcode {
+  background: linear-gradient(180deg, rgba(226, 234, 244, 0.95), rgba(240, 244, 248, 0.98));
+}
+body.light-theme .leetcode-stat strong,
+body.light-theme .leetcode-accent-card strong {
+  color: var(--text-primary);
+}
+body.light-theme .leetcode-rank-box strong {
+  color: var(--accent);
+}
+body.light-theme .leetcode-stat-label {
+  color: var(--accent);
+}
+body.light-theme .leetcode-accent-card p {
+  color: var(--text-secondary);
+}
+body.light-theme .viewer-chip {
+  background: rgba(255, 255, 255, 0.9);
+}
+body.light-theme .viewer-chip strong {
+  color: var(--text-primary);
+}
+
 /* ===== RESET & BASE ===== */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; font-size: 16px; }
@@ -541,7 +565,7 @@ body::before {
   justify-content: space-between;
 }
 .leetcode-stat strong {
-  color: #f3f7ff;
+  color: var(--text-primary);
 }
 .leetcode-footer {
   display: grid;
