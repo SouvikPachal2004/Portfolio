@@ -354,33 +354,44 @@ function showToast(message, type = 'success') {
 
   if (profileLinkEl) profileLinkEl.href = LEETCODE_PROFILE_URL;
 
-  requestJson('/api/leetcode-profile', { method: 'GET' }, 2)
-    .then((data) => {
-      const profile = data.profile || {};
-      const contest = data.contest || {};
+  // Try localStorage cache first for instant display
+  const CACHE_KEY = 'lc_profile_cache';
+  const CACHE_TTL = 10 * 60 * 1000; // 10 min on frontend
+  try {
+    const cached = JSON.parse(localStorage.getItem(CACHE_KEY) || 'null');
+    if (cached && (Date.now() - cached.ts) < CACHE_TTL) {
+      applyLeetCodeData(cached.data);
+    }
+  } catch { /* ignore */ }
 
-      nameEl.textContent = profile.realName || data.username || 'Souvik Pachal';
-      if (avatarEl && profile.userAvatar) avatarEl.src = profile.userAvatar;
-      if (usernameEl) usernameEl.textContent = `@${data.username || 'SouvikPachal'}`;
-      if (rankingEl) rankingEl.textContent = profile.ranking ? `#${Number(profile.ranking).toLocaleString()}` : '--';
-      if (totalSolvedEl) totalSolvedEl.textContent = (data.solved?.all ?? '--').toLocaleString?.() || data.solved?.all || '--';
-      if (easySolvedEl) easySolvedEl.textContent = (data.solved?.easy ?? '--').toLocaleString?.() || data.solved?.easy || '--';
-      if (mediumSolvedEl) mediumSolvedEl.textContent = (data.solved?.medium ?? '--').toLocaleString?.() || data.solved?.medium || '--';
-      if (hardSolvedEl) hardSolvedEl.textContent = (data.solved?.hard ?? '--').toLocaleString?.() || data.solved?.hard || '--';
-      if (ratingEl) ratingEl.textContent = contest.rating ? Math.round(contest.rating) : '--';
-      if (contestsEl) contestsEl.textContent = contest.attendedContestsCount || '--';
-      if (topPercentageEl) topPercentageEl.textContent = contest.topPercentage ? `${Number(contest.topPercentage).toFixed(2)}%` : '--';
+  function applyLeetCodeData(data) {
+    const profile = data.profile || {};
+    const contest = data.contest || {};
+    nameEl.textContent = profile.realName || data.username || 'Souvik Pachal';
+    if (avatarEl && profile.userAvatar) avatarEl.src = profile.userAvatar;
+    if (usernameEl) usernameEl.textContent = `@${data.username || 'SouvikPachal'}`;
+    if (rankingEl) rankingEl.textContent = profile.ranking ? `#${Number(profile.ranking).toLocaleString()}` : '--';
+    if (totalSolvedEl) totalSolvedEl.textContent = (data.solved?.all ?? '--').toLocaleString?.() || data.solved?.all || '--';
+    if (easySolvedEl) easySolvedEl.textContent = (data.solved?.easy ?? '--').toLocaleString?.() || data.solved?.easy || '--';
+    if (mediumSolvedEl) mediumSolvedEl.textContent = (data.solved?.medium ?? '--').toLocaleString?.() || data.solved?.medium || '--';
+    if (hardSolvedEl) hardSolvedEl.textContent = (data.solved?.hard ?? '--').toLocaleString?.() || data.solved?.hard || '--';
+    if (ratingEl) ratingEl.textContent = contest.rating ? Math.round(contest.rating) : '--';
+    if (contestsEl) contestsEl.textContent = contest.attendedContestsCount || '--';
+    if (topPercentageEl) topPercentageEl.textContent = contest.topPercentage ? `${Number(contest.topPercentage).toFixed(2)}%` : '--';
+  }
+
+  requestJson('/api/leetcode-profile', { method: 'GET', timeoutMs: 15000 }, 2)
+    .then((data) => {
+      applyLeetCodeData(data);
+      // Save to localStorage for next visit
+      try { localStorage.setItem(CACHE_KEY, JSON.stringify({ ts: Date.now(), data })); } catch { /* ignore */ }
     })
     .catch(() => {
-      nameEl.textContent = 'LeetCode profile unavailable right now';
-      if (rankingEl) rankingEl.textContent = '--';
-      if (totalSolvedEl) totalSolvedEl.textContent = '--';
-      if (easySolvedEl) easySolvedEl.textContent = '--';
-      if (mediumSolvedEl) mediumSolvedEl.textContent = '--';
-      if (hardSolvedEl) hardSolvedEl.textContent = '--';
-      if (ratingEl) ratingEl.textContent = '--';
-      if (contestsEl) contestsEl.textContent = '--';
-      if (topPercentageEl) topPercentageEl.textContent = '--';
+      if (nameEl.textContent === 'Loading profile...') {
+        nameEl.textContent = 'LeetCode profile unavailable right now';
+      }
+      [rankingEl, totalSolvedEl, easySolvedEl, mediumSolvedEl, hardSolvedEl, ratingEl, contestsEl, topPercentageEl]
+        .forEach(el => { if (el && el.textContent === '--' || el?.textContent === 'Loading profile...') el.textContent = '--'; });
     });
 })();
 

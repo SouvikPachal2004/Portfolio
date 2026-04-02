@@ -24,6 +24,9 @@ const REQUEST_TTL_MS = 3 * 24 * 60 * 60 * 1000;
 const DOWNLOAD_TTL_MS = 7 * 24 * 60 * 60 * 1000;
 const LEETCODE_USERNAME = process.env.LEETCODE_USERNAME || 'SouvikPachal';
 const GOOGLE_DRIVE_RESUME_URL = process.env.GOOGLE_DRIVE_RESUME_URL
+
+// In-memory LeetCode cache (5 minute TTL)
+const leetcodeCache = { data: null, fetchedAt: 0, TTL: 5 * 60 * 1000 };
   || 'https://drive.google.com/file/d/1CladXwfkrRcYJfF_0HNTH7hTcTs4A5L-/view?usp=drive_link';
 const viewerStorePath = process.env.VIEWER_STORE_PATH || path.join(__dirname, 'viewer-count.json');
 const resumePathCandidates = [
@@ -75,11 +78,22 @@ app.post('/api/viewer-count', (req, res) => {
 app.get('/api/leetcode-profile', async (req, res) => {
   const username = String(req.query.username || LEETCODE_USERNAME).trim();
 
+  // Serve from cache if still fresh
+  if (leetcodeCache.data && (Date.now() - leetcodeCache.fetchedAt) < leetcodeCache.TTL) {
+    return res.json({ success: true, cached: true, ...leetcodeCache.data });
+  }
+
   try {
     const profile = await fetchLeetCodeProfile(username);
-    return res.json({ success: true, ...profile });
+    leetcodeCache.data = profile;
+    leetcodeCache.fetchedAt = Date.now();
+    return res.json({ success: true, cached: false, ...profile });
   } catch (err) {
     console.error('LeetCode profile error:', err.message);
+    // Return stale cache if available rather than failing
+    if (leetcodeCache.data) {
+      return res.json({ success: true, cached: true, stale: true, ...leetcodeCache.data });
+    }
     return res.status(500).json({ success: false, error: 'Failed to load LeetCode profile.' });
   }
 });
@@ -505,6 +519,14 @@ if (require.main === module) {
   const PORT = process.env.PORT || 3000;
   app.listen(PORT, () => {
     console.log(`Server running on http://localhost:${PORT}`);
+    // Pre-warm LeetCode cache on startup
+    fetchLeetCodeProfile(LEETCODE_USERNAME)
+      .then(profile => {
+        leetcodeCache.data = profile;
+        leetcodeCache.fetchedAt = Date.now();
+        console.log('LeetCode cache warmed up.');
+      })
+      .catch(err => console.warn('LeetCode warm-up failed:', err.message));
   });
 }
 
