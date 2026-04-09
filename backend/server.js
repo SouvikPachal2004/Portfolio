@@ -24,10 +24,10 @@ const REQUEST_TTL_MS = 3 * 24 * 60 * 60 * 1000;
 const DOWNLOAD_TTL_MS = 7 * 24 * 60 * 60 * 1000;
 const LEETCODE_USERNAME = process.env.LEETCODE_USERNAME || 'SouvikPachal';
 const GOOGLE_DRIVE_RESUME_URL = process.env.GOOGLE_DRIVE_RESUME_URL
+  || 'https://drive.google.com/file/d/1CladXwfkrRcYJfF_0HNTH7hTcTs4A5L-/view?usp=drive_link';
 
 // In-memory LeetCode cache (5 minute TTL)
 const leetcodeCache = { data: null, fetchedAt: 0, TTL: 5 * 60 * 1000 };
-  || 'https://drive.google.com/file/d/1CladXwfkrRcYJfF_0HNTH7hTcTs4A5L-/view?usp=drive_link';
 const viewerStorePath = process.env.VIEWER_STORE_PATH || path.join(__dirname, 'viewer-count.json');
 const resumePathCandidates = [
   process.env.RESUME_FILE_PATH,
